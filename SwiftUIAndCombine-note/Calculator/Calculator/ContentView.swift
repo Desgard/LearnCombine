@@ -9,35 +9,20 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    let keyPad: [[CalculatorButtonItem]] = [
+        [ .command(.clear), .command(.flip), .command(.percent), .op(.divide) ],
+        [ .digit(4), .digit(5), .digit(6), .op(.minus) ],
+        [ .digit(1), .digit(2), .digit(3), .op(.plus) ],
+        [ .digit(0), .dot, .op(.equal) ]
+    ]
+
     var body: some View {
-        HStack {
-            CalculatorButton(
-                title: "1",
-                size: CGSize(width: 88, height: 88),
-                backgroundColorName: "digitBackground"
-            ) {
-                print("Buton 1")
-            }
-            CalculatorButton(
-                title: "2",
-                size: CGSize(width: 88, height: 88),
-                backgroundColorName: "digitBackground"
-            ) {
-                print("Buton 1")
-            }
-            CalculatorButton(
-                title: "3",
-                size: CGSize(width: 88, height: 88),
-                backgroundColorName: "digitBackground"
-            ) {
-                print("Buton 1")
-            }
-            CalculatorButton(
-                title: "+",
-                size: CGSize(width: 88, height: 88),
-                backgroundColorName: "operatorBackground"
-            ) {
-                print("Buton 1")
+        VStack(alignment: .trailing, spacing: 12) {
+            Text("0")
+                .font(.system(size: 76))
+            ForEach(keyPad, id: \.self) { row in
+                CalculatorButtonRow(row: row)
             }
         }
     }
@@ -49,6 +34,23 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 
+struct CalculatorButtonRow: View {
+    let row: [CalculatorButtonItem]
+    var body: some View {
+        HStack {
+            ForEach(row, id: \.self) { item in
+                CalculatorButton(
+                    title: item.title,
+                    size: item.size,
+                    backgroundColorName: item.backgroundColorName
+                ) {
+                    print("Buton: \(item.title)")
+                }
+            }
+        }
+    }
+}
+
 struct CalculatorButton: View {
     
     let fontSize: CGFloat = 38
@@ -56,16 +58,17 @@ struct CalculatorButton: View {
     let size: CGSize
     let backgroundColorName: String
     let action: () -> Void
+    let widthMutiply: CGFloat = 1
     
     var body: some View {
         Button(action: action) {
             Text(title)
                 .font(.system(size: fontSize))
                 .foregroundColor(.white)
-                .frame(width: size.width, height: size.height)
+                .frame(width: size.width * widthMutiply, height: size.height)
                 .background(Color(backgroundColorName))
-                .cornerRadius(size.width / 2)
-            
+                .cornerRadius(size.height / 2)
         }
     }
 }
+
