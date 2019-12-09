@@ -45,7 +45,7 @@ extension CalculatorButtonItem {
     
     var size: CGSize {
         if case let .digit(value) = self, value == 0 {
-            return CGSize(width: 88 * 2, height: 88)
+            return CGSize(width: 88 * 2 + 8, height: 88)
         }
         return CGSize(width: 88, height: 88)
     }
