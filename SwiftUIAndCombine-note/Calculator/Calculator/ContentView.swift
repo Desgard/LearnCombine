@@ -10,12 +10,15 @@ import SwiftUI
 
 struct ContentView: View {
     
-    let scale: CGFloat = UIScreen.main.bounds.width / 414
 
+    let scale: CGFloat = UIScreen.main.bounds.width / 414
+    
+    @State private var brain: CalculatorBrain = .left("0")
+    
     var body: some View {
         VStack(spacing: 12) {
             Spacer()
-            Text("0")
+            Text(brain.output)
                 .font(.system(size: 76))
                 .minimumScaleFactor(0.5)
                 .padding(.trailing, 24)
@@ -23,7 +26,8 @@ struct ContentView: View {
                 .frame(minWidth: 0,
                        maxWidth: .infinity,
                        alignment: .trailing)
-            CalculatorButtonPad()
+            CalculatorButtonPad(brain: $brain)
+                .padding(.bottom)
         }
         .scaleEffect(scale)
     }
@@ -39,6 +43,9 @@ struct ContentView_Previews: PreviewProvider {
 }
 
 struct CalculatorButtonRow: View {
+    
+    @Binding var brain: CalculatorBrain
+    
     let row: [CalculatorButtonItem]
     var body: some View {
         HStack {
@@ -49,6 +56,7 @@ struct CalculatorButtonRow: View {
                     backgroundColorName: item.backgroundColorName
                 ) {
                     print("Buton: \(item.title)")
+                    self.brain = self.brain.apply(item: item)
                 }
             }
         }
@@ -56,8 +64,12 @@ struct CalculatorButtonRow: View {
 }
 
 struct CalculatorButtonPad: View {
+    
+    @Binding var brain: CalculatorBrain
+    
     let keyPad: [[CalculatorButtonItem]] = [
         [ .command(.clear), .command(.flip), .command(.percent), .op(.divide) ],
+        [ .digit(7), .digit(8), .digit(9), .op(.multiply) ],
         [ .digit(4), .digit(5), .digit(6), .op(.minus) ],
         [ .digit(1), .digit(2), .digit(3), .op(.plus) ],
         [ .digit(0), .dot, .op(.equal) ]
@@ -66,30 +78,11 @@ struct CalculatorButtonPad: View {
     var body: some View {
         VStack(spacing: 8) {
             ForEach(keyPad, id: \.self) { row in
-                CalculatorButtonRow(row: row)
+                CalculatorButtonRow(brain: self.$brain, row: row)
             }
         }
     }
 }
 
-struct CalculatorButton: View {
-    
-    let fontSize: CGFloat = 38
-    let title: String
-    let size: CGSize
-    let backgroundColorName: String
-    let action: () -> Void
-    let widthMutiply: CGFloat = 1
-    
-    var body: some View {
-        Button(action: action) {
-            Text(title)
-                .font(.system(size: fontSize))
-                .foregroundColor(.white)
-                .frame(width: size.width * widthMutiply, height: size.height)
-                .cornerRadius(size.height / 2)
-                .background(Color(backgroundColorName))
-        }
-    }
-}
+
 

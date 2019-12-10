@@ -14,3 +14,9 @@ var body: some View {
   } 
 }
 ```
+
+我们可以调换 `background` 和 `cornerRadius` 的顺序吗？试试看它会造成什么影响, 并且对结果进行解释说明。另外,我们可以调换 `font` 和 `foregroundColor` 的顺序吗? 它又会有怎么样的影响?
+
+### Solve
+
+如果更换 `background` 和 `cornerRadius` 的顺序，实验结果发现
